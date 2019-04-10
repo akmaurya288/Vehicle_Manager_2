@@ -28,6 +28,7 @@ class _DriverState extends State<Driver> {
         child:Scaffold(
 
           appBar:AppBar(
+            title: Text("Driver"),
             elevation: 5,
           ),
       body: Container(
@@ -98,7 +99,17 @@ class _DriverState extends State<Driver> {
                           children: <Widget>[
                             Padding(
                                 padding: EdgeInsets.only(right: 10),
-                                child: Text("Vehicle",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)),
+                                child: Text("On Leave",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)),
+                            Switch(
+                              value: getLeaveValue(this.model[index].leave),
+                              onChanged: (value) {
+                                setState(() {
+                                  this.model[index].leave = value.toString();
+                                });
+                              },
+                              activeTrackColor: Colors.lightGreenAccent,
+                              activeColor: Colors.green,
+                            ),
                           ],
                         )
                       ],
@@ -167,8 +178,10 @@ class _DriverState extends State<Driver> {
     );
   }
 
-  void getVehicleList(){
-
+  bool getLeaveValue(String st){
+    debugPrint(st);
+    if(st=='true')return true;
+        else return false;
   }
 
   void _delete(BuildContext context, DriverDB driverDB) async {

@@ -15,7 +15,7 @@ class _PaperState extends State<Paper> {
     return Material(
         child:DefaultTabController(length: 4,
     child: Scaffold(
-        body:NestedScrollView(headerSliverBuilder: (BuildContext context,bool innerBoxIsScrolled){
+        body:NestedScrollView( headerSliverBuilder: (BuildContext context,bool innerBoxIsScrolled){
     return <Widget>[
     SliverAppBar(
     pinned: true,

@@ -28,6 +28,7 @@ class _AddDriverState extends State<AddDriver> {
   String appBarTitle;
   DriverDB driverDB;
   bool edit=false;
+
   _AddDriverState(this.driverDB, this.appBarTitle, this.edit);
   TextEditingController nameController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
@@ -162,23 +163,6 @@ class _AddDriverState extends State<AddDriver> {
                       },
                       decoration: InputDecoration(
                           labelText: 'Experience',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0)
-                          )
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                    child: TextField(
-                      enabled: edit,
-                      controller: leaveController,
-                      onChanged: (value) {
-                        debugPrint('Something changed in Title Text Field');
-                        updateTitle();
-                      },
-                      decoration: InputDecoration(
-                          labelText: 'Leave',
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0)
                           )
@@ -424,6 +408,10 @@ class _AddDriverState extends State<AddDriver> {
     }
 
     driverDB.date = DateFormat.yMMMd().format(DateTime.now());
+
+    if(driverDB.leave==null)
+      driverDB.leave==true;
+
     int result;
     if (driverDB.driverID != null) {  // Case 1: Update operation
       debugPrint(driverDB.driverID.toString());
