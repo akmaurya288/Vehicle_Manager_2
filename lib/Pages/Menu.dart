@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vehicle_manager_2/DataBase/DriverModel.dart';
+import 'package:vehicle_manager_2/DataBase/VehicleModel.dart';
+import 'package:vehicle_manager_2/Screen/AddVehicle.dart';
+import 'package:vehicle_manager_2/Screen/AddDriver.dart';
+import 'package:vehicle_manager_2/Screen/AssignVehicle.dart';
+import 'package:vehicle_manager_2/Screen/settings.dart';
+import 'package:vehicle_manager_2/Screen/backup.dart';
+import 'package:vehicle_manager_2/Pages/Vehicle.dart';
 
 class Menu extends StatelessWidget {
   @override
@@ -32,14 +40,14 @@ class Menu extends StatelessWidget {
                         'Driver',
                       ),
                       leading: Icon(null),
-                      onTap: ()=> {},
+                      onTap: ()=>navigateToAddDriver(DriverDB(0,'','','',0,'','','',0,'',''),'Add Driver',true, context)
                     ),
                     ListTile(
                       title: Text(
-                        'Car',
+                        'Vehicle',
                       ),
                       leading: Icon(null),
-                      onTap: ()=> {},
+                      onTap: ()=>navigateToAddVehicle(VehicleDB('', '', '', ''),'Add Vehicle',true, context),
                     ),
                     ListTile(
                       title: Text(
@@ -49,20 +57,32 @@ class Menu extends StatelessWidget {
                       onTap: ()=>{},
                     ),
                   ],),
-                  
-                  MaterialButton(onPressed: ()=> {},
+
+                  MaterialButton(onPressed: ()=>navigateToVehicles("Vehicles",context),
                     elevation: 5,
                     height: 60,
                     minWidth: MediaQuery.of(context).size.width,
                     child: Row(
                         children: <Widget>[
                           Icon(Icons.directions_car,size: 30,),
+                          Text("  Vahicles",style: TextStyle(fontSize: 15),)
+                        ]
+                    ),
+                  ),
+
+                  MaterialButton(onPressed: ()=>navigateToAssignVehicle(DriverDB(0,'','','',0,'','','',0,'',''),context),
+                    elevation: 5,
+                    height: 60,
+                    minWidth: MediaQuery.of(context).size.width,
+                    child: Row(
+                        children: <Widget>[
+                          Icon(Icons.attachment,size: 30,),
                           Text("  Assign Vahicle",style: TextStyle(fontSize: 15),)
                         ]
                     ),
                   ),
 
-                  MaterialButton(onPressed: ()=> {},
+                  MaterialButton(onPressed: ()=>navigateToBackup("Backup",context),
                     elevation: 5,
                     height: 60,
                     minWidth: MediaQuery.of(context).size.width,
@@ -74,7 +94,7 @@ class Menu extends StatelessWidget {
                     ),
                   ),
 
-                  MaterialButton(onPressed: ()=> {},
+                  MaterialButton(onPressed: ()=>navigateToSettings("Settings",context),
                     elevation: 5,
                     height: 60,
                     minWidth: MediaQuery.of(context).size.width,
@@ -93,5 +113,41 @@ class Menu extends StatelessWidget {
         )
       ),
     );
+  }
+
+  void navigateToVehicles(String title, BuildContext context) async {
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Vehicle();
+    }));
+  }
+
+  void navigateToAssignVehicle(DriverDB driverDB,BuildContext context) async {
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return AssignVehicle(driverDB);
+    }));
+  }
+
+  void navigateToSettings(String title, BuildContext context) async {
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Settings();
+    }));
+  }
+
+  void navigateToBackup(String title, BuildContext context) async {
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Backup();
+    }));
+  }
+
+  void navigateToAddDriver(DriverDB driverDB, String title, bool edit, BuildContext context) async {
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return AddDriver(driverDB, title, edit);
+    }));
+  }
+
+  void navigateToAddVehicle(VehicleDB vehicleDB, String title, bool edit, BuildContext context) async {
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return AddVehicle(vehicleDB, title, edit);
+    }));
   }
 }

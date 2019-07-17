@@ -6,8 +6,6 @@ String _carimage;
 String _modelno;
 
 
-
-
 VehicleDB(this._plateno,this._type,this._carimage,this._modelno);
 VehicleDB.withID(this._vehicleID,this._plateno,this._type,this._carimage,this._modelno);
 
@@ -17,8 +15,6 @@ String get plateno =>_plateno;
 String get type =>_type;
   String get carimage =>_carimage;
   String get modelno =>_modelno;
-
-
 
 
 set vehicleID(int newVehicleID){
@@ -56,7 +52,7 @@ if(vehicleID!= null){
 map['vehicleID'] = _vehicleID;
 }
 map['plateno']=_plateno;
-map['carimage']=_carimage;
+map['carImage']=_carimage;
 map['modelno']=_modelno;
 map['type']=_type;
 
@@ -66,7 +62,7 @@ VehicleDB.fromVehicleMapObject(dynamic map){
 this._vehicleID=map['vehicleID'];
 this._plateno=map['plateno'];
 this._modelno=map['modelno'];
-this._carimage=map['carimage'];
+this._carimage=map['carImage'];
 this._type=map['type'];
 
 

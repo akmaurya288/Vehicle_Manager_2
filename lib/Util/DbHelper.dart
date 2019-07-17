@@ -109,7 +109,7 @@ class DatabaseHelper {
             ' $colexp INTEGER, $colmed TEXT, $colPov TEXT, $collicence TEXT, $colmob INTEGER, $colexpiry TEXT, $colleave TEXT)');
 
     await db.execute(
-        'CREATE TABLE $vehicleTable($colvid INTEGER PRIMARY KEY,$vcolmodel INTEGER,$vcoltype TEXT,$vcolplate TEXT, $vcolcarImage TEXT,'
+        'CREATE TABLE $vehicleTable($colvid INTEGER PRIMARY KEY,$vcolmodel TEXT,$vcoltype TEXT,$vcolplate TEXT, $vcolcarImage TEXT,'
             'FOREIGN KEY($colvid) REFERENCES $noteTable($colvid))');
 
     await db.execute(

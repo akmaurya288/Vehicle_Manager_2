@@ -171,7 +171,51 @@ class _AddDriverState extends State<AddDriver> {
                   ),
                   Row(
                     children: <Widget>[
-                      Padding(
+                      Expanded(
+                          flex: 1,
+                          child:Padding(
+                            padding: EdgeInsets.all(20),
+                            child:Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 1)
+                                ),
+
+                                child:Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child:SizedBox(
+                                    height: 200,
+                                    width: 192,
+                                    child:  _driverImage==null ? Text("Select Image"):Image.file(_driverImage),
+                                  ),
+                                )
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child:Column(
+                            children: <Widget>[
+                              Text ("Driver Image",style: TextStyle(fontSize: 23),),
+                              Row(
+                                children: <Widget>[
+                                  RaisedButton(
+                                      child: Icon(Icons.image),
+                                      onPressed: getImageGalleryDriver
+                                  ),
+                                  RaisedButton(
+                                    child: Icon(Icons.camera),
+                                    onPressed:getImageCameraDriver,
+                                  )
+                                ],
+                              )
+                            ],
+                          )),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                          child:Padding(
                         padding: EdgeInsets.all(20),
                         child:Container(
                         decoration: BoxDecoration(
@@ -181,14 +225,16 @@ class _AddDriverState extends State<AddDriver> {
                         child:Padding(
                           padding: EdgeInsets.all(5),
                           child:SizedBox(
-                          height: 256,
+                          height: 200,
                           width: 192,
                           child:  _policeverificationimage==null ? Text("Select Image"):Image.file(_policeverificationimage),
                         ),
                         )
                       ),
-                      ),
-                      Column(
+                      ),),
+                      Expanded(
+                          flex:1,
+                          child:Column(
                         children: <Widget>[
                           Text ("Police Verification",style: TextStyle(fontSize: 23),),
                           Row(
@@ -205,12 +251,13 @@ class _AddDriverState extends State<AddDriver> {
                         ],
                       )
                         ],
-                      ),
+                      )),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      Padding(
+                      Expanded(flex: 1,
+                          child:Padding(
                         padding: EdgeInsets.all(20),
                         child:Container(
                             decoration: BoxDecoration(
@@ -220,14 +267,16 @@ class _AddDriverState extends State<AddDriver> {
                             child:Padding(
                               padding: EdgeInsets.all(5),
                               child:SizedBox(
-                                height: 256,
+                                height: 200,
                                 width: 192,
                                 child:  _licenceimage==null ? Text("Select Image"):Image.file(_licenceimage),
                               ),
                             )
                         ),
-                      ),
-                      Column(
+                      )),
+                      Expanded(
+                        flex: 1,
+                          child:Column(
                         children: <Widget>[
                           Text ("Licence",style: TextStyle(fontSize: 23),),
                           Row(
@@ -244,45 +293,7 @@ class _AddDriverState extends State<AddDriver> {
                             ],
                           )
                         ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(20),
-                        child:Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(width: 1)
-                            ),
-
-                            child:Padding(
-                              padding: EdgeInsets.all(5),
-                              child:SizedBox(
-                                height: 256,
-                                width: 192,
-                                child:  _driverImage==null ? Text("Select Image"):Image.file(_driverImage),
-                              ),
-                            )
-                        ),
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Text ("Police Verification",style: TextStyle(fontSize: 23),),
-                          Row(
-                            children: <Widget>[
-                              RaisedButton(
-                                  child: Icon(Icons.image),
-                                  onPressed: getImageGalleryDriver
-                              ),
-                              RaisedButton(
-                                child: Icon(Icons.camera),
-                                onPressed:getImageCameraDriver,
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+                      )),
                     ],
                   ),
                 ],
@@ -365,6 +376,7 @@ class _AddDriverState extends State<AddDriver> {
   }
 
   void _save() async {
+
     String path=(await getApplicationDocumentsDirectory()).path;
     if(Directory('$path/images/policeverification/').existsSync()==false)
       new Directory('$path/images/policeverification/').create(recursive: true);
@@ -379,7 +391,6 @@ class _AddDriverState extends State<AddDriver> {
       driverDB.policeVeri = saveimg1.path;
       debugPrint(saveimg1.path);
     }
-    _SaveImage();
     if(Directory('$path/images/licence/').existsSync()==false)
       new Directory('$path/images/licence/').create(recursive: true);
     if(_drivername!=nameController.text&&File('$path/images/licence/$_drivername.jpg').existsSync()){
@@ -413,10 +424,10 @@ class _AddDriverState extends State<AddDriver> {
       driverDB.leave==true;
 
     int result;
-    if (driverDB.driverID != null) {  // Case 1: Update operation
-      debugPrint(driverDB.driverID.toString());
+    if (driverDB.driverID != null) {  // Case 1: U
       result = await helper.updateDriverNote(driverDB);
     } else { // Case 2: Insert Operation
+      driverDB.vehicleID=99999;
       result = await helper.insertDriverNote(driverDB);
     }
 

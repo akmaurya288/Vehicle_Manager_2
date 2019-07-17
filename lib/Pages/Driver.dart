@@ -24,6 +24,10 @@ class _DriverState extends State<Driver> {
       model = List<DriverDB>();
       updateListView();
     }
+    if (vehicleDB == null) {
+      vehicleDB = List<VehicleDB>();
+      updateListView();
+    }
     return Material(
         child:Scaffold(
 
@@ -92,7 +96,8 @@ class _DriverState extends State<Driver> {
                         Row(
                           children: <Widget>[
                             Text("Vehicle ID:",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                            Text(this.model[index].driverID.toString(),style: TextStyle(fontSize: 20),),
+                            Text(model[index].vehicleID>9999 ? "No vehicle Selected":"${vehicleDB[model[index].vehicleID-1].plateno}",
+                              style: TextStyle(fontSize: 20),),
                           ],
                         ),
                         Row(
@@ -101,10 +106,13 @@ class _DriverState extends State<Driver> {
                                 padding: EdgeInsets.only(right: 10),
                                 child: Text("On Leave",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)),
                             Switch(
-                              value: getLeaveValue(this.model[index].leave),
+                              value: getLeaveValue(model[index].leave),
                               onChanged: (value) {
                                 setState(() {
-                                  this.model[index].leave = value.toString();
+                                  model[index].leave = value.toString();
+                                  if(value)model[index].vehicleID=99999;
+                                  helper.updateDriverNote(model[index]);
+                                  debugPrint(model[index].vehicleID.toString());
                                 });
                               },
                               activeTrackColor: Colors.lightGreenAccent,
@@ -127,7 +135,8 @@ class _DriverState extends State<Driver> {
         onPressed:()=>navigateToDetail(DriverDB(0,'','','',0,'','','',0,'',''),'Add Driver',true),
         backgroundColor: Colors.redAccent,
         tooltip: "Add new Todo",
-        child: new Icon(Icons.add,color: Colors.white,),
+        child: new Icon(Icons.add,
+          color: Colors.white,),
       ),
         ),
     );
@@ -215,6 +224,15 @@ class _DriverState extends State<Driver> {
         setState(() {
           this.model = model;
           this.count = model.length;
+        });
+      });
+    });
+    dbFuture.then((database){
+      Future<List<VehicleDB>> noteListFuture = helper.getVehicleList();
+      noteListFuture.then((vehicleDB) {
+        setState(() {
+          this.vehicleDB = vehicleDB;
+          this.vcount = vehicleDB.length;
         });
       });
     });

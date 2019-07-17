@@ -26,6 +26,7 @@ class _AddVehicleState extends State<AddVehicle> {
   String _plateno;
   String appBarTitle;
   VehicleDB vehicleDB;
+  int _radioValue;
   bool edit=false;
   _AddVehicleState(this.vehicleDB, this.appBarTitle, this.edit);
 
@@ -81,7 +82,7 @@ class _AddVehicleState extends State<AddVehicle> {
                       updateTitle();
                     },
                     decoration: InputDecoration(
-                        labelText: 'Driver Name',
+                        labelText: 'Plate No',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0)
                         )
@@ -100,24 +101,7 @@ class _AddVehicleState extends State<AddVehicle> {
                       });
                     },
                     decoration: InputDecoration(
-                        labelText: 'Contact Mobile Number',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0)
-                        )
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                  child: TextField(
-                    enabled: edit,
-                    controller: typeController,
-                    onChanged: (value) {
-                      debugPrint('Something changed in Title Text Field');
-                      updateTitle();
-                    },
-                    decoration: InputDecoration(
-                        labelText: 'Address',
+                        labelText: 'Model Number',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0)
                         )
@@ -126,7 +110,59 @@ class _AddVehicleState extends State<AddVehicle> {
                 ),
                 Row(
                   children: <Widget>[
-                    Padding(
+                  Text('Vehile Type : ',
+                  style: new TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),),
+                  Text(
+                    typeController.text,
+                    style: new TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                ),
+                      ]
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Radio(
+                      value: 0,
+                      groupValue: _radioValue,
+                      onChanged: _handleRadioValueChange1,
+                    ),
+                    new Text(
+                      'Patrol',
+                      style: new TextStyle(fontSize: 16.0),
+                    ),
+                    new Radio(
+                      value: 1,
+                      groupValue: _radioValue,
+                      onChanged: _handleRadioValueChange1,
+                    ),
+                    new Text(
+                      'Diesel',
+                      style: new TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
+                    new Radio(
+                      value: 2,
+                      groupValue: _radioValue,
+                      onChanged: _handleRadioValueChange1,
+                    ),
+                    new Text(
+                      'CNG',
+                      style: new TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child:Padding(
                       padding: EdgeInsets.all(20),
                       child:Container(
                           decoration: BoxDecoration(
@@ -136,16 +172,19 @@ class _AddVehicleState extends State<AddVehicle> {
                           child:Padding(
                             padding: EdgeInsets.all(5),
                             child:SizedBox(
-                              height: 256,
+                              height: 200,
                               width: 192,
                               child:  _carimage==null ? Text("Select Image"):Image.file(_carimage),
                             ),
                           )
                       ),
                     ),
-                    Column(
+                    ),
+                      Expanded(
+                        flex: 1,
+                          child:Column(
                       children: <Widget>[
-                        Text ("Police Verification",style: TextStyle(fontSize: 23),),
+                        Text ("Vehicle Image",style: TextStyle(fontSize: 23),),
                         Row(
                           children: <Widget>[
                             RaisedButton(
@@ -160,6 +199,7 @@ class _AddVehicleState extends State<AddVehicle> {
                           ],
                         )
                       ],
+                    )
                     ),
                   ],
                 ),
@@ -169,6 +209,24 @@ class _AddVehicleState extends State<AddVehicle> {
         )
     );
   }
+  void _handleRadioValueChange1(int i){
+    setState(() {
+    _radioValue = i;
+
+    switch (_radioValue) {
+      case 0:
+        vehicleDB.type=typeController.text="Patrol";
+        break;
+      case 1:
+        vehicleDB.type=typeController.text="Diesel";
+        break;
+      case 2:
+        vehicleDB.type=typeController.text="CNG";
+        break;
+    }
+  });
+  }
+
   Future getImageGallery()async{
     File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery,maxHeight: 1024.0,maxWidth: 768.0);
     setState(() {
@@ -185,7 +243,6 @@ class _AddVehicleState extends State<AddVehicle> {
   Future checkEmpty() async{
     if(vehicleDB.plateno!=null){
       _plateno=vehicleDB.plateno;
-
       plateNoController.text=vehicleDB.plateno;
       modelController.text=vehicleDB.modelno;
       carimageController.text=vehicleDB.carimage;
@@ -193,7 +250,19 @@ class _AddVehicleState extends State<AddVehicle> {
 
       setState(() {
         _carimage = File.fromUri(Uri.file(vehicleDB.carimage));
-      });
+
+          switch (typeController.text) {
+            case 'Patrol':
+              _radioValue=0;
+              break;
+            case 'Diesel':
+              _radioValue=1;
+              break;
+            case 'CNG':
+              _radioValue=2;
+              break;
+          }
+        });
     }
   }
   void updateTitle(){
@@ -203,11 +272,11 @@ class _AddVehicleState extends State<AddVehicle> {
   }
   // Save data to database
   void _save() async {
-    String path=(await getApplicationDocumentsDirectory()).path;
-    if(Directory('$path/images/vehicle/').existsSync()==false)
+    String path=( await getApplicationDocumentsDirectory()).path;
+    if( Directory('$path/images/vehicle/').existsSync()==false)
       new Directory('$path/images/vehicle/').create(recursive: true);
 
-    if(_carimage!=plateNoController.text&&File('$path/images/vehicle/$_plateno.jpg').existsSync()){
+    if( _carimage!=plateNoController.text&&File('$path/images/vehicle/$_plateno.jpg').existsSync()){
       File('$path/images/vehicle/$_plateno.jpg').delete();
     }
     if(_carimage!=null) {
@@ -215,17 +284,14 @@ class _AddVehicleState extends State<AddVehicle> {
       File saveimg1 = await _carimage.copy(
           '$path/images/vehicle/$imgname.jpg');
       vehicleDB.carimage = saveimg1.path;
-      debugPrint(saveimg1.path);
     }
-
+    // Case 1: Update operation
     int result;
-    if (vehicleDB.vehicleID != null) {  // Case 1: Update operation
-      debugPrint(vehicleDB.vehicleID.toString());
+    if (vehicleDB.vehicleID != null) {
       result = await helper.updatevehicleNote(vehicleDB);
     } else { // Case 2: Insert Operation
       result = await helper.insertvehicleNote(vehicleDB);
     }
-
     moveToLastScreen();
 
     if (result == 0) {
